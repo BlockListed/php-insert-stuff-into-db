@@ -1,0 +1,29 @@
+version: '3'
+volumes:
+  maria:
+
+services:
+  nginx:
+    image: nginx:mainline
+    ports:
+      - 80:80
+      - 3306:3306
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+    dns: 1.1.1.1
+  php-fpm:
+    build:
+      dockerfile: PHP.Dockerfile
+    volumes:
+      - ./www:/scripts
+    network_mode: service:nginx
+  mariadb:
+    image: mariadb/server
+    volumes:
+      - maria:/var/lib/mysql
+    network_mode: service:nginx
+    environment:
+      MARIADB_ROOT_PASSWORD: asdfasdf
+      MARIADB_DATABASE: leaking
+      MARIADB_USER: is
+      MARIADB_PASSWORD: bad
